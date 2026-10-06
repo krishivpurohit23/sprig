@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPRIG — Grow a better campus.</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%2202 24 24%22><text y=%2220%22 font-size=%2220%22>🌱</text></svg>">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Manrope & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            forest: {
+              950: '#06160F',
+              900: '#0A2217',
+              800: '#0E2F20',
+              700: '#144630',
+              600: '#1B5B3E',
+            },
+            leaf: {
+              400: '#34D399',
+              500: '#10B981',
+              600: '#059669',
+            },
+            ivory: {
+              50: '#FAF8F5',
+              100: '#FBF9F4',
+              200: '#F4EFE6',
+              300: '#EAE2D5',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React 18 & ReactDOM 18 -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* Organic botanical animations */
+    @keyframes sprigSway {
+      0%, 100% {
+        transform: rotate(0deg);
+      }
+      30% {
+        transform: rotate(1.8deg) translateY(-1px);
+      }
+      70% {
+        transform: rotate(-1.5deg) translateY(0.5px);
+      }
+    }
+
+    .sprig-sway {
+      transform-origin: 120px 180px;
+      animation: sprigSway 4.5s ease-in-out infinite;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-slideUp {
+      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes scaleUp {
+      from {
+        opacity: 0;
+        transform: scale(0.92);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .animate-scaleUp {
+      animation: scaleUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Smooth scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(16, 185, 129, 0.2);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(16, 185, 129, 0.4);
+    }
+  </style>
+</head>
+<body class="bg-[#FBF9F4] text-stone-900 selection:bg-emerald-500 selection:text-white antialiased min-h-screen">
+  <div id="root"></div>
+
+  <!-- Main JavaScript App Entrypoint as ES Module -->
+  <script type="module">
+    import { App } from './app.js';
+
+    const rootEl = document.getElementById('root');
+    const root = ReactDOM.createRoot(rootEl);
+    root.render(React.createElement(App));
+  </script>
+</body>
+</html>

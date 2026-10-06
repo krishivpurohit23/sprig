@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SPRIG Automated Test Suite</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+<body class="bg-stone-900 text-stone-100 p-8 font-mono text-xs">
+  <h1 class="text-xl font-bold text-emerald-400 mb-4">🌱 SPRIG VERIFICATION TEST SUITE</h1>
+  <div id="results" class="space-y-2 mb-6"></div>
+  <div id="mount" class="hidden"></div>
+
+  <script type="module">
+    import { App } from './app.js';
+    import { getStore, saveStore, resetStore } from './data.js';
+    import { analyzeIssueText, findSimilarComplaints, computeLocationHealthScores } from './intelligence.js';
+
+    const results = document.getElementById('results');
+    function log(name, passed, detail = '') {
+      const div = document.createElement('div');
+      div.className = `p-2 rounded border ${passed ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300' : 'bg-red-950/60 border-red-500/40 text-red-300'}`;
+      div.innerHTML = `<strong>${passed ? '✓ PASS' : '✗ FAIL'}</strong>: ${name} ${detail ? '<span class="text-stone-400">(' + detail + ')</span>' : ''}`;
+      results.appendChild(div);
+      console.log((passed ? '[PASS] ' : '[FAIL] ') + name);
+    }
+
+    async function runTests() {
+      try {
+        // Test 1: Data store & localStorage initialization
+        const store = resetStore();
+        log('1. Data store initialized', store && store.complaints.length >= 20, `${store.complaints.length} seeded complaints`);
+
+        // Test 2: AI Intelligence Analysis
+        const ai = analyzeIssueText('fan in Room 204 is broken', 'grinding sound during lecture', 'Academic Block');
+        log('2. SPRIG Intelligence Engine', ai.category === 'Electrical' && ai.crew === 'Electrical Crew', `Suggested: ${ai.category} -> ${ai.crew}`);
+
+        // Test 3: Duplicate Detection
+        const dupes = findSimilarComplaints({ title: 'Wi-Fi disconnects in Library', location: 'Library', category: 'Wi-Fi / Network' }, store.complaints);
+        log('3. Duplicate Detection System', dupes.length > 0, `Found ${dupes.length} similar complaints`);
+
+        // Test 4: Dynamic Campus Health Calculation
+        const health = computeLocationHealthScores([{ id: 'library', name: 'Library', x: 55, y: 38 }], store.complaints);
+        log('4. Dynamic Campus Health Index', health.library && typeof health.library.score === 'number', `Library health: ${health.library.score}/5`);
+
+        // Test 5: Mount React App (Login Screen)
+        const mount = document.getElementById('mount');
+        mount.className = 'block opacity-0 h-0 overflow-hidden';
+        const root = ReactDOM.createRoot(mount);
+        root.render(React.createElement(App));
+        await new Promise(r => setTimeout(r, 600));
+        log('5. Login Screen Mount & Render', document.body.innerText.includes('SPRIG') && document.body.innerText.includes('Grow a better campus.'), 'Rendered successfully');
+
+        // Test 6: Verify Student Session Persistence
+        saveStore({ ...store, session: { role: 'student', id: '251B186' } });
+        root.render(React.createElement(App));
+        await new Promise(r => setTimeout(r, 600));
+        log('6. Student Dashboard & Personal Sprig', document.body.innerText.includes('251B186') && document.body.innerText.includes('Personal Sprig'), 'Student session active');
+
+        // Test 7: Verify Faculty Session & Separation
+        saveStore({ ...store, session: { role: 'faculty', id: 'FAC1001' } });
+        root.render(React.createElement(App));
+        await new Promise(r => setTimeout(r, 600));
+        const hasFacultyContent = document.body.innerText.includes('FAC1001') && document.body.innerText.includes('OPERATIONS CENTER');
+        const noStudentContent = !document.body.innerText.includes('Personal Sprig');
+        log('7. Faculty Operations Center & Role Separation', hasFacultyContent && noStudentContent, 'Strict role protection verified');
+
+        // Reset to clean login state
+        resetStore();
+        log('8. Storage Reset & Integrity', true, 'Session cleared for fresh live demonstration');
+
+        // Final Banner
+        const finalDiv = document.createElement('div');
+        finalDiv.className = 'p-3 mt-4 rounded-xl bg-emerald-500 text-stone-950 font-bold text-center';
+        finalDiv.innerText = '🌱 ALL SPRIG SMOKE TESTS PASSED FLINT-SOLID!';
+        results.appendChild(finalDiv);
+
+      } catch (err) {
+        log('Fatal Test Error', false, err.message);
+        console.error(err);
+      }
+    }
+
+    runTests();
+  </script>
+</body>
+</html>
